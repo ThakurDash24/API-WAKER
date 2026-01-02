@@ -5,6 +5,7 @@ const APIS = [
   { id: 'chatbot', name: 'Unicharge Chatbot', url: 'https://unicharge-chatbot-24.onrender.com' },
   { id: 'resumyzer', name: 'Resumyzer', url: 'https://resumyzer-24.onrender.com' },
   { id: 'spam', name: 'Spam Classifier', url: 'https://sms-spam-classifier-24.onrender.com' },
+  { id: 'wallet', name: 'Personalised Wallet', url: 'https://unicharge-wallet-24.onrender.com/' },
 ];
 
 function App() {
