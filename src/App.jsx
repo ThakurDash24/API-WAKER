@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 const APIS = [
@@ -9,8 +9,9 @@ const APIS = [
 
 function App() {
   const [statuses, setStatuses] = useState({}); // { id: 'idle' | 'waking' | 'done' | 'error' }
+  const [isAuto, setIsAuto] = useState(false);
 
-  const wakeApi = async (api) => {
+  const wakeApi = useCallback(async (api) => {
     setStatuses(prev => ({ ...prev, [api.id]: 'waking' }));
     try {
       // Using no-cors to avoid CORS errors since we just want to trigger the wake-up
@@ -20,7 +21,7 @@ function App() {
       console.error(`Error waking ${api.name}:`, error);
       setStatuses(prev => ({ ...prev, [api.id]: 'error' }));
     }
-  };
+  }, []);
 
   const wakeAll = () => {
     APIS.forEach(api => {
@@ -29,6 +30,19 @@ function App() {
       }
     });
   };
+
+  useEffect(() => {
+    let interval;
+    if (isAuto) {
+      const runAutoWake = () => {
+        APIS.forEach(api => wakeApi(api));
+      };
+
+      runAutoWake(); // Run immediately when enabled
+      interval = setInterval(runAutoWake, 180000); // 3 minutes
+    }
+    return () => clearInterval(interval);
+  }, [isAuto, wakeApi]);
 
   return (
     <div className="container">
@@ -41,6 +55,18 @@ function App() {
         <button className="wake-all-btn" onClick={wakeAll}>
           Wake All APIs 🚀
         </button>
+      </div>
+
+      <div className="controls">
+        <label className="auto-switch">
+          <input
+            type="checkbox"
+            checked={isAuto}
+            onChange={(e) => setIsAuto(e.target.checked)}
+          />
+          <span className="slider"></span>
+          <span className="label-text">Keep Alive (Every 3m)</span>
+        </label>
       </div>
 
       <div className="api-list">
@@ -60,7 +86,7 @@ function App() {
               <button
                 className="wake-btn"
                 onClick={() => wakeApi(api)}
-                disabled={status === 'waking' || status === 'done'}
+                disabled={status === 'waking'}
               >
                 {status === 'waking' ? '...' : 'Start'}
               </button>
