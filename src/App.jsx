@@ -6,6 +6,7 @@ const APIS = [
   { id: 'resumyzer', name: 'Resumyzer', url: 'https://resumyzer-24.onrender.com' },
   { id: 'spam', name: 'Spam Classifier', url: 'https://sms-spam-classifier-24.onrender.com' },
   { id: 'wallet', name: 'Personalised Wallet', url: 'https://unicharge-wallet-24.onrender.com/' },
+  { id: 'nexpair', name: 'Nexpair', url: 'https://sms-backend-kjcb.onrender.com' },
 ];
 
 function App() {
